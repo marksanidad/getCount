@@ -177,7 +177,7 @@ let getCountParticipant = (req, callback) => {
                             if (err) throw err;
                         })
                     }
-                    else if(categoryArray[i] === "pollList") {
+                    else if (categoryArray[i] === "pollList") {
                         getUserPoll(req, (err, result) => {
                             if (err) throw err;
                         })
@@ -230,21 +230,34 @@ getUserPoll = (req, callback) => {
         }
         else {
             getExistCategory(res, "pollList", (exist, result) => {
-                if(exist === true) {
+                if (exist === true) {
+                    userData.poll = 0;
                     var pollID = Object.keys(result);
 
                     pollID.forEach(poll => {
                         var optn = Object.keys(result[poll].options);
 
                         optn.forEach(option => {
-                            var responses = Object.keys(result[poll].options[option].responses);
-                            if(responses !== null || responses !== undefined){
-                                console.log("response", responses)
-                            }
+                            var response = Object.keys(result[poll].options[option]);
+
+                            response.forEach(element => {
+                                if (element === "responses") {
+                                    var responseID = Object.keys(result[poll].options[option].responses);
+                                    console.log("response", responseID)
+
+                                    responseID.forEach(id => {
+                                        if (id === req.userid) {
+                                            var pollCount = 1 + userData.poll;
+                                            userData.poll = pollCount
+                                        }
+                                    })
+                                }
+                            });
                         })
                     })
                 }
             })
+            return callback(false)
         }
     })
 }
