@@ -173,26 +173,25 @@ let getCountParticipant = (req, callback) => {
 
                 else if (categoryArray[i] === "pollList" || categoryArray[i] === "question") {
                     if (categoryArray[i] === "question") {
-                        getUserQuestion(req, (err, res) => {
-                            if (err) {
-                                throw err;
-                            }
+                        getUserQuestion(req, (err, result) => {
+                            if (err) throw err;
                         })
                     }
-                    // else if(categoryArray[i] === "pollList") {
-
-                    // }
+                    else if(categoryArray[i] === "pollList") {
+                        getUserPoll(req, (err, result) => {
+                            if (err) throw err;
+                        })
+                    }
                 }
 
             }
-            console.log("qf", userData.question)
+            console.log("qf3", userData.question)
             return callback(false, userData);
         }
     })
 }
 
 let getUserQuestion = (req, callback) => {
-    //userData.question = 0;
     countDB.getDataCount(req, (err, res) => {
         if (err) {
             throw error;
@@ -200,6 +199,7 @@ let getUserQuestion = (req, callback) => {
         else {
             getExistCategory(res, "question", (exist, result) => {
                 if (exist === true) {
+                    userData.question = 0;
                     var agendaID = Object.keys(result);
 
                     agendaID.forEach(agenda => {
@@ -214,11 +214,39 @@ let getUserQuestion = (req, callback) => {
                         })
                     })
                 }
+                else {
+                    userData.question = 0;
+                }
+                return callback(false);
             })
-            return callback(false, userData.question);
         }
     })
+}
 
+getUserPoll = (req, callback) => {
+    countDB.getDataCount(req, (err, res) => {
+        if (err) {
+            throw error;
+        }
+        else {
+            getExistCategory(res, "pollList", (exist, result) => {
+                if(exist === true) {
+                    var pollID = Object.keys(result);
+
+                    pollID.forEach(poll => {
+                        var optn = Object.keys(result[poll].options);
+
+                        optn.forEach(option => {
+                            var responses = Object.keys(result[poll].options[option].responses);
+                            if(responses !== null || responses !== undefined){
+                                console.log("response", responses)
+                            }
+                        })
+                    })
+                }
+            })
+        }
+    })
 }
 
 module.exports = {
