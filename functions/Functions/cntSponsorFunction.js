@@ -34,23 +34,23 @@ let getSponsorCount = (req, callback) => {
                     else if (element === "material" && exist === true) {
                         spnsrData.material = 0;
                         if (dataCount.sponsor === null || dataCount.sponsor === undefined ||
-                            dataCount.sponsor[req.sponsorid] === null || dataCount.sponsor[req.sponsorid] === undefined) {
+                            dataCount.sponsor[req.id] === null || dataCount.sponsor[req.id] === undefined) {
                             spnsrData.material = 0;
                         }
                         else {
-                            spnsrData.material = dataCount.sponsor[req.sponsorid].count;
-                            console.log("material", req.sponsorid, dataCount.sponsor[req.sponsorid].count);
+                            spnsrData.material = dataCount.sponsor[req.id].count;
+                            console.log("material", req.id, dataCount.sponsor[req.id].count);
                         }
                     }
                     else if (element === "pagevisit" && exist === true) {
                         spnsrData.pagevisit = 0;
                         if (dataCount.partner === null || dataCount.partner === undefined ||
-                            dataCount.partner[req.sponsorid] === null || dataCount.partner[req.sponsorid] === undefined) {
+                            dataCount.partner[req.id] === null || dataCount.partner[req.id] === undefined) {
                             spnsrData.pagevisit = 0;
                         }
                         else {
-                            spnsrData.pagevisit = dataCount.partner[req.sponsorid].count;
-                            console.log("pagevisit", req.sponsorid, dataCount.partner[req.sponsorid].count);
+                            spnsrData.pagevisit = dataCount.partner[req.id].count;
+                            console.log("pagevisit", req.sponsorid, dataCount.partner[req.id].count);
                         }
                     }
                 })
@@ -85,5 +85,5 @@ let getSponsorContacts = (req, callback) => {
 }
 
 module.exports = {
-    getSponsorCount: getSponsorCount
+    getSponsorCount: getSponsorCount,
 }

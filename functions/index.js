@@ -21,8 +21,7 @@ app.use((req, res, next) => {
  
 app.get(['/getCount/organizer/:event'],appRoute);
 app.get(['/getCount/participant/:event/:userid'],appRoute);
-app.get(['/getCount/sponsor/:event/:sponsorid/:userid'],appRoute);
-app.get(['/getCount/speaker/:event/:speakerid/:userid'],appRoute);
+app.get(['/getCount/:user/:event/:id/:userid'],appRoute);
 
 const count = functions.https.onRequest(app);
 

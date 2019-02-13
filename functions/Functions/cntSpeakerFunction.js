@@ -22,6 +22,10 @@ let getSpeakerCount = (req, callback) => {
             return callback(false, noData)
         }
         else {
+            getSpeakerContacts(req, (err) => {
+                if (err) throw err;
+            })
+
             categoryArray.forEach(element => {
                 orgCount.getExistCategory(res, element, (exist, dataCount) => {
                     if (element === "material" && exist === true) {
@@ -30,8 +34,8 @@ let getSpeakerCount = (req, callback) => {
                             spkData.material = 0;
                         }
                         else {
-                            spkData.material = dataCount.speaker[req.speakerid].count;
-                            console.log("material", dataCount.speaker[req.speakerid].count);
+                            spkData.material = dataCount.speaker[req.id].count;
+                            console.log("material", dataCount.speaker[req.id].count);
                         }
                     }
                     else if (element === "pagevisit" && exist === true) {
@@ -40,7 +44,7 @@ let getSpeakerCount = (req, callback) => {
                             spkData.pagevisit = 0;
                         }
                         else {
-                            spkData.pagevisit = dataCount.expert[req.speakerid].count;
+                            spkData.pagevisit = dataCount.expert[req.id].count;
                         }
                     }
                     else if (element === "rate" && exist === true) {
@@ -50,14 +54,76 @@ let getSpeakerCount = (req, callback) => {
                         }
                         else {
                             var agendaArray = Object.keys(dataCount.speaker);
-                            console.log("array", agendaArray)
+
+                            agendaArray.forEach(element => {
+                                if (dataCount.speaker[element][req.id] === null
+                                    || dataCount.speaker[element][req.id] === undefined) {
+                                    console.log(element, null)
+                                }
+                                else {
+                                    var spkCount = dataCount.speaker[element][req.id].count + spkData.rateSpeaker;
+                                    spkData.rateSpeaker = spkCount;
+                                    console.log("rate", spkCount);
+                                }
+                            })
                         }
+                    }
+                    else if (element === "question" && exist === true) {
+                        spkData.question = 0;
+                        var sessionArray = Object.keys(dataCount)
+
+                        sessionArray.forEach(id => {
+                            var qid = Object.keys(dataCount[id])
+
+                            qid.forEach(element => {
+                                if (dataCount[id][element].speakerId === req.id) {
+                                    var qCount = 1 + spkData.question;
+                                    spkData.question = qCount;
+                                    console.log("question", qCount);
+                                }
+                            })
+                        })
+                    }
+                    else if (element === "pollList" && exist === true) {
+                        spkData.poll = 0;
+                        var pollArray = Object.keys(dataCount);
+
+                        pollArray.forEach(element => {
+                            if (dataCount[element].speakerId === req.id) {
+                                var pollCount = 1 + spkData.poll;
+                                spkData.poll = pollCount;
+                                console.log("poll", pollCount);
+                            }
+                        })
                     }
                 })
             })
         }
     })
     return callback(false, spkData);
+}
+
+let getSpeakerContacts = (req, callback) => {
+    countDB.getDataAttenddeeCount(req.userid, (err, res, message) => {
+        if (err === true) {
+            return callback(true, message);
+        }
+        else if (Object.keys(res).includes("analytics") === false) {
+            return callback(false, noData)
+        }
+        else {
+            orgCount.getExistCategory(res, "contacts", (exist, dataCount) => {
+                if(exist === true) {
+                    spkData.contacts = dataCount.count;
+                    console.log("contacts", dataCount.count)
+                }
+                else {
+                    spkData.contacts = 0
+                }
+            })
+        }
+    })
+    return callback(false);
 }
 
 module.exports = {
