@@ -62,7 +62,7 @@ let getSponsorCount = (req, callback) => {
 }
 
 let getSponsorContacts = (req, callback) => {
-    countDB.getDataAttenddeeCount(req.userid, (err, res, message) => {
+    countDB.getDataAttenddeeCount(req, (err, res, message) => {
         if (err === true) {
             return callback(true, message);
         }
@@ -70,7 +70,7 @@ let getSponsorContacts = (req, callback) => {
             return callback(false, noData)
         }
         else {
-            orgCount.getExistCategory(res, "contacts", (exist, dataCount) => {
+            orgCount.getExistUserCategory(res, "contacts", req.event, (exist, dataCount) => {
                 if(exist === true) {
                     spnsrData.contacts = dataCount.count;
                     console.log("contacts", dataCount.count)

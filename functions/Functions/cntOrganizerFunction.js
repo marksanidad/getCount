@@ -52,9 +52,10 @@ let getCountOrganizer = (req, callback) => {
     })
 }
 
-let getExistCategory = (res, category, callback) => {
+let getExistCategory =  (res, category, callback) => {
     if (category === "camfilter" || category === "contacts"
-        || category === "pagevisit" || category === "material" || category === "rate") {
+        || category === "pagevisit" || category === "material"
+        || category === "rate") {
         if (Object.keys(res).includes('analytics') === false
             || Object.keys(res.analytics).includes(category) === false) {
             console.log("exist", undefined, false)
@@ -76,6 +77,20 @@ let getExistCategory = (res, category, callback) => {
             console.log("res", result, true)
             return callback(true, result);
         }
+    }
+}
+
+let getExistUserCategory = (res, category, event, callback) => {
+    if (Object.keys(res).includes('analytics') === false
+        || Object.keys(res.analytics).includes(event) === false
+        || Object.keys(res.analytics[event]).includes(category) === false) {
+        console.log("exist", undefined, false)
+        return callback(false)
+    }
+    else {
+        result = res.analytics[event][category]
+        console.log("res", result, true)
+        return callback(true, result);
     }
 }
 
@@ -135,4 +150,5 @@ let getRateCount = (req, callback) => {
 module.exports = {
     getCountOrganizer: getCountOrganizer,
     getExistCategory: getExistCategory,
+    getExistUserCategory: getExistUserCategory,
 }

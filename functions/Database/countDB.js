@@ -7,12 +7,12 @@ let getDataCount = (req, callback) => {
 	})
 }
 
-let getDataAttenddeeCount = (userid, callback) => {
-	admin.database().ref('users/attendee/' + userid).once('value', data => {
+let getDataAttenddeeCount = (req, callback) => {
+	admin.database().ref('users/attendee/' + req.userid).once('value', data => {
 		let test = data.val();
 		console.log("test",test)
 		if (test === null || test === undefined) {
-			return callback(true, null, {message: "userid not exists!"})
+			return callback(true, null, {message: "userid does not exists!"})
 		}
 		else {
 			return callback(false, test, {message: "userid exists"})

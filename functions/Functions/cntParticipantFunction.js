@@ -16,7 +16,7 @@ var noData = "No Data Count!"
 var categoryArray = ["camfilter", "pagevisit", "material", "contacts", "pollList", "question", "rate"];
 
 let getCountParticipant = (req, callback) => {
-    countDB.getDataAttenddeeCount(req.userid, (err, res, message) => {
+    countDB.getDataAttenddeeCount(req, (err, res, message) => {
         if (err === true) {
             return callback(true, message);
         }
@@ -29,7 +29,7 @@ let getCountParticipant = (req, callback) => {
                     || categoryArray[i] === "material" || categoryArray[i] === "pagevisit"
                     || categoryArray[i] === "rate") {
 
-                    orgCount.getExistCategory(res, categoryArray[i], (exist, dataCount) => {
+                    orgCount.getExistUserCategory(res, categoryArray[i], req.event, (exist, dataCount) => {
                         if (categoryArray[i] === "camfilter" && exist === true) {
                             userData.camfilter = 0;
                             var categoryID = Object.keys(dataCount);
